@@ -1,7 +1,9 @@
 const path = require('path');
 const express = require('express');
 const chalk = require('chalk');
-const { syncAndSeed } = require('./db/index.js');
+const { syncAndSeed, models } = require('./db/index.js');
+const {Users} = models;
+const session = require('express-session');
 
 const PORT = 3000;
 
@@ -28,12 +30,18 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(session({
+  secret: 'super secret',
+  saveUninitialized: false
+
+}))
 app.post('/api/login', (req, res, next) => {
   const { username, password } = req.body;
-
-
+  if(Users[username] && Users[password]){
+    res.status(200).send({message: 'success'});
+  }
   // TODO: This obviously isn't all we should do...
-  res.status(200).send({ something: 'probably user related?' });
+
   // You can toggle this to see how the app behaves if an error goes down...
   // res.status(401).send({ message: 'You are unauthorized!' });
 });
