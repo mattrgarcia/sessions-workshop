@@ -60,15 +60,26 @@ app.post('/api/login', (req, res, next) => {
   // res.status(401).send({ message: 'You are unauthorized!' });
 });
 
-app.get('/api/logout', (req, res, next) => {
+app.delete('/api/logout', (req, res, next) => {
   // TODO: Build this functionality.
+  req.session.destroy()
+  res.status(204).send("user is now logged out");
   next();
 });
-
-app.get('/api/session', (req, res, next) => {
-  // TODO: Build this functionality.
+/*
+app.get("/api/sessions", (req, res, next) => {
+  const user = req.session.user;
+  if (user) {
+    return res.send(user);
+  }
+  next({ status: 401, message: "user is not logged in" });
 });
 
+app.delete("/api/sessions", (req, res, next) => {
+  req.session.destroy();
+  res.status(204).send("user is now logged out");
+});
+*/
 app.get('*', (req, res) => res.sendFile(path.join(STATIC_DIR, './index.html')));
 
 app.use((err, req, res, next) => {
